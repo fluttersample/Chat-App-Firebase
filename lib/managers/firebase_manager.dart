@@ -163,7 +163,7 @@ class FirebaseManager{
     final id = await fireStore!.collection('users')
         .where('email' , isEqualTo: email).get();
 
-    return id.docs[0].exists;
+    return id.docs[0].id;
   }
 
 
