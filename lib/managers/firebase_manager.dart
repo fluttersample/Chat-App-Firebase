@@ -145,15 +145,11 @@ class FirebaseManager{
     return Future.value(snapshot);
 
   }
-  // Future<String?> downloadUrlImage()async{
-  //
-  //   return await storage.ref(.);
-  //
-  // }
 
 
 
-  Future<String> saveDataToFirestore(UserDetailModel model)async{
+
+  Future<String> saveUserToFirestore(UserDetailModel model)async{
   final idDuc=  await  fireStore!.collection('users').add(model.toMap());
   return idDuc.id;
 
@@ -162,8 +158,15 @@ class FirebaseManager{
   Future<String?> getDucId({required String email })async{
     final id = await fireStore!.collection('users')
         .where('email' , isEqualTo: email).get();
-
     return id.docs[0].id;
+  }
+
+  Future<QuerySnapshot<Map<String,dynamic>>> searchUserByName({required String name})
+  async {
+   return  await fireStore!.collection('users')
+      .where('displayName',isEqualTo: name).get();
+
+
   }
 
 

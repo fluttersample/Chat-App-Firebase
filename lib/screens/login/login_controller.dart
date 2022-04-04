@@ -2,7 +2,7 @@
 import 'package:fiirebasee/core/app_notifier.dart';
 import 'package:fiirebasee/managers/firebase_manager.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
-import 'package:fiirebasee/screens/profile/profile.dart';
+import 'package:fiirebasee/screens/home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -45,11 +45,15 @@ class LoginController extends BaseProvider{
       updateValueLoading(false);
       if (user != null) {
 
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //       builder: (context) => Profile(
+        //         idDuc: id,
+        //       )),
+        // );
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (context) => Profile(
-                idDuc: id,
-              )),
+              builder: (context) => const HomeSc()),
         );
       }
     }

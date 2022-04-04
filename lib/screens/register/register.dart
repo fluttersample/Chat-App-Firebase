@@ -44,11 +44,8 @@ class _RegisterPageState extends State<RegisterPage> {
       },
       child: Scaffold(
         backgroundColor: Colors.grey.shade100,
-        appBar: const PreferredSize(
-          preferredSize: Size(double.infinity,56),
-          child: AppbarWidget(
-            text: 'Register',
-          ),
+        appBar: const AppbarWidget(
+          text: 'Register',
         ),
         body: Center(
           child: SingleChildScrollView(

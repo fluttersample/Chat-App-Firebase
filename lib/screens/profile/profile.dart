@@ -24,8 +24,6 @@ class _ProfileState extends State<Profile> {
 
 
 
-
-
   Future<UserDetailModel?> getDataFromFirestore()async{
 
     final docUser= FirebaseManager.fireStore!.collection('users')
@@ -52,11 +50,8 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size(double.infinity,56),
-        child: AppbarWidget(
-          text: 'Profile User',
-        ),
+      appBar: const AppbarWidget(
+        text: 'Profile User',
       ),
       body:  //Container()
 

@@ -47,12 +47,10 @@ class _LoginScState extends State<LoginSc> {
         _focusPassword.unfocus();
       },
       child: Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size(double.infinity, 56),
-          child: AppbarWidget(
+        appBar:const AppbarWidget(
             text: 'Firebase Authentication',
           ),
-        ),
+
         body: _buildContent()
       ),
     );
@@ -149,7 +147,7 @@ class _LoginScState extends State<LoginSc> {
         ],
       ),
       const SizedBox(
-        height: 10,
+        height: 20,
       ),
       GestureDetector(
         onTap: () {

@@ -1,9 +1,13 @@
 import 'package:fiirebasee/managers/firebase_manager.dart';
 import 'package:fiirebasee/screens/SendStorage.dart';
+import 'package:fiirebasee/screens/home/home.dart';
+import 'package:fiirebasee/screens/home/home_controller.dart';
 import 'package:fiirebasee/screens/login/login.dart';
 import 'package:fiirebasee/screens/login/login_controller.dart';
 import 'package:fiirebasee/screens/register/register.dart';
 import 'package:fiirebasee/screens/register/register_controller.dart';
+import 'package:fiirebasee/screens/search/search.dart';
+import 'package:fiirebasee/screens/search/search_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +29,14 @@ class MyApp extends StatelessWidget {
           create: (context) => LoginController(),
         child: const LoginSc(),),
         ChangeNotifierProvider(create:(context) =>  RegisterController(),
-        child: const RegisterPage(),)
+        child: const RegisterPage(),),
+
+        ChangeNotifierProvider(create:(context) =>  HomeController(),
+        child: const HomeSc(),),
+
+        ChangeNotifierProvider(create:(context) =>  SearchController(),
+        child: const SearchSc(),),
+
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

@@ -66,7 +66,7 @@ class RegisterController extends BaseProvider
   }
   Future<String> saveToFirestore(UserDetailModel model) async{
 
-    return await FirebaseManager.instance.saveDataToFirestore(model);
+    return await FirebaseManager.instance.saveUserToFirestore(model);
   }
 
   void selectImageFromGallery()async
