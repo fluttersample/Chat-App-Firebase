@@ -1,6 +1,8 @@
 
 import 'package:fiirebasee/models/user_detail_model.dart';
+import 'package:fiirebasee/screens/search/search_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchTile extends StatelessWidget {
   final UserDetailModel model ;
@@ -34,20 +36,20 @@ class SearchTile extends StatelessWidget {
                   width: 130,
                   child: Text(model.displayName!,
                   maxLines: 1,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
                   ),),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 SizedBox(
                   width: 130,
                   child: Text(model.email!,
                     maxLines: 1,
-                    style: TextStyle(
+                    style: const TextStyle(
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -56,7 +58,12 @@ class SearchTile extends StatelessWidget {
             ),
             Spacer(),
             OutlinedButton.icon(
-                onPressed: (){},
+                onPressed: (){
+                  context.read<SearchController>()
+                      .createChatRoomAndNavigate(
+                      detailModel:  model,
+                      context: context);
+                },
                 label: const Icon(Icons.message_rounded,
                 size: 20),
                icon:  Text('Message'),

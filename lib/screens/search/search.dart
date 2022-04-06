@@ -21,15 +21,7 @@ class _SearchScState extends State<SearchSc> {
   Widget build(BuildContext context) {
     final controller = Provider.of<SearchController>
       (context,listen: false);
-    QuerySnapshot<Map<String,dynamic>>? searchSnapshot;
 
-    initiateSearch(){
-      FirebaseManager.instance.
-      searchUserByName(name: controller.controllerSearch.text)
-          .then((value) {
-            searchSnapshot=value;
-      });
-    }
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300 ,
@@ -105,11 +97,11 @@ class _SearchScState extends State<SearchSc> {
           }
         if(snapshot.hasError)
           {
-            return Center(
+            return const Center(
               child: Text('Wrong '),
             );
           }
-        return Center(child: const CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
 
       }
     );

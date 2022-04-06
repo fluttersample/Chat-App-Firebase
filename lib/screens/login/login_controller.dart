@@ -1,6 +1,7 @@
 
 import 'package:fiirebasee/core/app_notifier.dart';
 import 'package:fiirebasee/managers/firebase_manager.dart';
+import 'package:fiirebasee/managers/storage.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
 import 'package:fiirebasee/screens/home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,8 +14,12 @@ class LoginController extends BaseProvider{
   GoogleSignInAccount? googleSignInAccount;
   bool isLoading = false;
 
-  final emailTextController = TextEditingController();
-  final passwordTextController = TextEditingController();
+  final emailTextController = TextEditingController(
+    text: 'test@gmail.com'
+  );
+  final passwordTextController = TextEditingController(
+    text: 'test123'
+  );
 
   void signInFromGoogle()async{
     googleSignInAccount = await googleSignIn.signIn();
@@ -51,6 +56,15 @@ class LoginController extends BaseProvider{
         //         idDuc: id,
         //       )),
         // );
+        FirebaseManager.instance.getUserByEmail(
+            email: emailTextController.text)
+        .then((value) {
+          Storage.writeString(Storage.keyUsername, value.docs[0]
+          .data()['displayName']);
+        });
+        Storage.writeString(Storage.keyUserEmail, emailTextController.text);
+        Storage.writeBool(Storage.keyIsLogin, true);
+
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) => const HomeSc()),

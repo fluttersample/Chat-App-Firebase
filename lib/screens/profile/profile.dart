@@ -24,18 +24,18 @@ class _ProfileState extends State<Profile> {
 
 
 
-  Future<UserDetailModel?> getDataFromFirestore()async{
-
-    final docUser= FirebaseManager.fireStore!.collection('users')
-        .doc(widget.idDuc);
-    final snapshot= await docUser.get();
-
-    if(snapshot.exists)
-      {
-        return UserDetailModel.fromMap(snapshot.data()!);
-      }
-    return null;
-  }
+  // Future<UserDetailModel?> getDataFromFirestore()async{
+  //
+  //   final docUser= FirebaseManager.fireStore!.collection('users')
+  //       .doc(widget.idDuc);
+  //   final snapshot= await docUser.get();
+  //
+  //   if(snapshot.exists)
+  //     {
+  //       return UserDetailModel.fromMap(snapshot.data()!);
+  //     }
+  //   return null;
+  // }
 
 
 
@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
       body:  //Container()
 
       FutureBuilder<UserDetailModel?>(
-        future:  getDataFromFirestore(),
+//        future:  getDataFromFirestore(),
         builder: (context,  snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');

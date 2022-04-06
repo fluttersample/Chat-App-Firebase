@@ -1,15 +1,13 @@
 
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fiirebasee/core/utils/utils.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
 import 'package:fiirebasee/screens/widgets/utils.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +16,10 @@ class FirebaseManager{
   FirebaseManager._();
 
   static  FirebaseManager instance = FirebaseManager._();
-  static  FirebaseStorage? storage ;
-  static  FirebaseAuth? auth ;
-  static  FirebaseFirestore? fireStore;
-  static User? user;
+    FirebaseStorage? _storage ;
+    FirebaseAuth? _auth ;
+    FirebaseFirestore? _fireStore;
+   User? _user;
 
   // static FireBaseInitial instance1 (){
   //   if(instance == null )
@@ -40,9 +38,9 @@ class FirebaseManager{
             messagingSenderId: '610218298254',
             projectId: 'test-firebase-c04ad')
     );
-    storage = FirebaseStorage.instance;
-    auth =FirebaseAuth.instance;
-    fireStore =FirebaseFirestore.instance;
+    _storage = FirebaseStorage.instance;
+    _auth =FirebaseAuth.instance;
+    _fireStore =FirebaseFirestore.instance;
 
     return firebaseApp;
   }
@@ -55,29 +53,29 @@ class FirebaseManager{
      }) async{
 
     try {
-      final userCredential = await auth
+      final userCredential = await _auth
           !.createUserWithEmailAndPassword(email: email, password: password);
-      user = userCredential.user;
-      await user!.updateDisplayName(name);
-      await user!.reload();
-      user = auth!.currentUser;
+      _user = userCredential.user;
+      await _user!.updateDisplayName(name);
+      await _user!.reload();
+      _user = _auth!.currentUser;
 
 
     }on FirebaseAuthException catch (e)
     {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
-        Util.showSnackBar('The password provided is too weak',
+        Utils.showSnackBar('The password provided is too weak',
             context: context);
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
-        Util.showSnackBar('The account already exists for that email',
+        Utils.showSnackBar('The account already exists for that email',
             context: context);
       }
     } catch(e) {
        print(e);
     }
-    return user;
+    return _user;
 
   }
 
@@ -91,7 +89,7 @@ class FirebaseManager{
     User? user;
     try{
 
-      final userCredential = await auth!.signInWithEmailAndPassword
+      final userCredential = await _auth!.signInWithEmailAndPassword
         (email: email, password: password);
       user = userCredential.user;
 
@@ -99,12 +97,12 @@ class FirebaseManager{
     {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
-        Util.showSnackBar(
+        Utils.showSnackBar(
           'No user found for that email',
           context: context, );
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided.');
-        Util.showSnackBar(
+        Utils.showSnackBar(
           'Wrong password provided',
           context: context, );
       }
@@ -114,14 +112,14 @@ class FirebaseManager{
 
     Future<void> singOutUser()async
     {
-      return auth!.signOut();
+      return _auth!.signOut();
     }
 
 
    Future<User?> refreshUser(User user) async {
 
     await user.reload();
-    User? refreshedUser = auth!.currentUser;
+    User? refreshedUser = _auth!.currentUser;
     return refreshedUser;
   }
 
@@ -130,7 +128,7 @@ class FirebaseManager{
     if(file ==null) return Future.value(null) ;
       print(file.path);
       final fileName = path.basename(file.path);
-     TaskSnapshot snapshot = await storage
+     TaskSnapshot snapshot = await _storage
         !.ref()
         .child("assets/$fileName")
         .putFile(file);
@@ -150,25 +148,65 @@ class FirebaseManager{
 
 
   Future<String> saveUserToFirestore(UserDetailModel model)async{
-  final idDuc=  await  fireStore!.collection('users').add(model.toMap());
+  final idDuc=  await  _fireStore!.collection('users').add(model.toMap());
   return idDuc.id;
 
   }
 
   Future<String?> getDucId({required String email })async{
-    final id = await fireStore!.collection('users')
+    final id = await _fireStore!.collection('users')
         .where('email' , isEqualTo: email).get();
     return id.docs[0].id;
   }
 
   Future<QuerySnapshot<Map<String,dynamic>>> searchUserByName({required String name})
   async {
-   return  await fireStore!.collection('users')
+   return  await _fireStore!.collection('users')
       .where('displayName',isEqualTo: name).get();
+  }
+  Future<QuerySnapshot<Map<String,dynamic>>> getUserByEmail({required String email})
+  async {
+   return  await _fireStore!.collection('users')
+      .where('email',isEqualTo: email).get();
+  }
 
+ void createChatRoom(String chatRoomId ,  chatRoomMap)
+  {
+    _fireStore!.collection('ChatRoom')
+        .doc(chatRoomId).set(chatRoomMap).catchError((e){
+          print(e);
+    });
+  }
+  void addConversationMessage(
+      String chatRoomId ,
+      messageMap){
+    _fireStore!.collection('ChatRoom')
+        .doc(chatRoomId)
+        .collection('chats')
+        .add(messageMap).catchError((e){
+          print(e);
+    });
 
   }
 
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getConversationMessage(
+      String chatRoomId ) {
+
+   return _fireStore!.collection('ChatRoom')
+        .doc(chatRoomId)
+        .collection('chats')
+        .orderBy('time',descending: false)
+        .snapshots();
+
+  }
+  Stream<QuerySnapshot<Map<String, dynamic>>>
+  getChatRooms(String userName) {
+    return  _fireStore!.collection('ChatRoom')
+        .where('users' ,arrayContains: userName)
+        .snapshots();
+
+  }
 
   // Future<FirebaseAppCheck> appCheck()async
   // {

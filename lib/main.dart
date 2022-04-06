@@ -1,5 +1,8 @@
 import 'package:fiirebasee/managers/firebase_manager.dart';
+import 'package:fiirebasee/managers/storage.dart';
 import 'package:fiirebasee/screens/SendStorage.dart';
+import 'package:fiirebasee/screens/conversation/conversation.dart';
+import 'package:fiirebasee/screens/conversation/conversation_controller.dart';
 import 'package:fiirebasee/screens/home/home.dart';
 import 'package:fiirebasee/screens/home/home_controller.dart';
 import 'package:fiirebasee/screens/login/login.dart';
@@ -14,6 +17,7 @@ import 'package:provider/provider.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseManager.instance.initialFirebase();
+  await Storage.init();
   runApp(const MyApp());
 
 }
@@ -35,7 +39,14 @@ class MyApp extends StatelessWidget {
         child: const HomeSc(),),
 
         ChangeNotifierProvider(create:(context) =>  SearchController(),
-        child: const SearchSc(),),
+         child: const SearchSc(),),
+
+       ChangeNotifierProvider(
+         create:(context) =>  ConversationController(),
+        child: const ConversationSc(),
+       lazy: true),
+
+
 
       ],
       child: MaterialApp(

@@ -1,5 +1,10 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fiirebasee/managers/firebase_manager.dart';
+import 'package:fiirebasee/managers/storage.dart';
+import 'package:fiirebasee/models/chatRoom_model.dart';
+import 'package:fiirebasee/screens/conversation/conversation.dart';
 import 'package:fiirebasee/screens/home/home_controller.dart';
 import 'package:fiirebasee/screens/search/search.dart';
 import 'package:fiirebasee/screens/widgets/reusable_appbar.dart';
@@ -17,21 +22,98 @@ class HomeSc extends StatefulWidget {
 class _HomeScState extends State<HomeSc> {
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<HomeController>(context,listen: false);
+
 
     return Scaffold(
-     appBar: const AppbarWidget(text: 'Flutter + Firebase'),
-      body: ListView(
-
-      ),
+      backgroundColor: Colors.grey.shade300,
+     appBar: const AppbarWidget(text: 'Home'),
+      body: _buildChatRoomList(),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.push(context,
           MaterialPageRoute(builder: (context) =>
-            SearchSc(),));
+            const SearchSc(),));
         },
         child: const Icon(Icons.search),
       ),
     );
   }
+  Widget _buildChatRoomList()
+  {
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseManager.instance.getChatRooms(
+          Storage.readString(Storage.keyUsername)),
+      builder:(context, snapshot) {
+        if(snapshot.hasData)
+          {
+            if(snapshot.data!.docs.isEmpty)
+            {
+              return const Center(
+                child: Text('Not Found Data'),
+              );
+            }
+            return ListView.builder(
+              itemExtent: 75,
+              padding: const EdgeInsets.symmetric(
+                  vertical: 18,
+             ),
+              itemCount: snapshot.data!.docs.length,
+                itemBuilder:(context, index) {
+                  final data = snapshot.data!.docs[index];
+                  print(data.data());
+                  final model = ChatRoomModel
+                      .fromMap(data.data());
+                  return ItemChatRoomTile(model: model,);
+                }, );
+          }
+        return const Center(child: CircularProgressIndicator());
+      },
+       );
+  }
+
 }
+class ItemChatRoomTile extends StatelessWidget {
+  final ChatRoomModel model;
+  const ItemChatRoomTile({Key? key,
+  required this.model}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder:
+      (context) =>  ConversationSc(
+        chatRoomId: model.chatRoomId,
+      ),)),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30)
+        ),
+        
+        child: Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Image.network(model.urlImage,
+                width: 50,
+                height: 50,),
+              )
+            ),
+            const SizedBox(width: 8,),
+            Text(model.chatRoomId
+                .replaceAll('_', '')
+              .replaceAll(
+                Storage.readString(Storage.keyUsername),
+                ''),
+            style: const TextStyle(
+              fontSize: 18,
+            ),)
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
