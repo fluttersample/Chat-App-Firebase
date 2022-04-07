@@ -5,9 +5,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fiirebasee/core/utils/utils.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
-import 'package:fiirebasee/screens/widgets/utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,8 @@ class FirebaseManager{
     FirebaseStorage? _storage ;
     FirebaseAuth? _auth ;
     FirebaseFirestore? _fireStore;
-   User? _user;
+    User? _user;
+   FirebaseAnalytics? _analytics;
 
   // static FireBaseInitial instance1 (){
   //   if(instance == null )
@@ -41,6 +43,7 @@ class FirebaseManager{
     _storage = FirebaseStorage.instance;
     _auth =FirebaseAuth.instance;
     _fireStore =FirebaseFirestore.instance;
+    _analytics = FirebaseAnalytics.instance;
 
     return firebaseApp;
   }
@@ -148,7 +151,8 @@ class FirebaseManager{
 
 
   Future<String> saveUserToFirestore(UserDetailModel model)async{
-  final idDuc=  await  _fireStore!.collection('users').add(model.toMap());
+    final idDuc=  await  _fireStore!.collection('users')
+        .add(model.toMap());
   return idDuc.id;
 
   }
@@ -164,10 +168,12 @@ class FirebaseManager{
    return  await _fireStore!.collection('users')
       .where('displayName',isEqualTo: name).get();
   }
-  Future<QuerySnapshot<Map<String,dynamic>>> getUserByEmail({required String email})
+  Future<String> getUserNameByEmail({required String email})
   async {
-   return  await _fireStore!.collection('users')
+     final data =await _fireStore!.collection('users')
       .where('email',isEqualTo: email).get();
+     final name = data.docs[0].data()['displayName'];
+     return name;
   }
 
  void createChatRoom(String chatRoomId ,  chatRoomMap)
@@ -208,6 +214,9 @@ class FirebaseManager{
 
   }
 
+
+
+  }
   // Future<FirebaseAppCheck> appCheck()async
   // {
   //   FirebaseAppCheck firebaseAppCheck =  FirebaseAppCheck.instance;
@@ -217,5 +226,4 @@ class FirebaseManager{
   //   print(z);
   //   return firebaseAppCheck;
   // }
-}
 

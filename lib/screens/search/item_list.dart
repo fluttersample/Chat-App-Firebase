@@ -21,9 +21,17 @@ class SearchTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(25),
                 child: Image.network(
-                  model.photoUrl!,
+                  model.photoUrl??'',
                   errorBuilder: (context, error, stackTrace) =>
                   Image.asset('assets/ic_google.png'),
+                  loadingBuilder: (con,widget ,_) =>const
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: Center(child: CircularProgressIndicator(
+
+                    )),
+                  ),
                 ),
               )
             ),
@@ -56,7 +64,7 @@ class SearchTile extends StatelessWidget {
                 )
               ],
             ),
-            Spacer(),
+            const Spacer(),
             OutlinedButton.icon(
                 onPressed: (){
                   context.read<SearchController>()

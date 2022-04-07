@@ -9,7 +9,6 @@ import 'package:fiirebasee/managers/storage.dart';
 import 'package:fiirebasee/models/chatRoom_model.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
 import 'package:fiirebasee/screens/conversation/conversation.dart';
-import 'package:fiirebasee/screens/widgets/utils.dart';
 import 'package:flutter/material.dart';
 
 class SearchController extends BaseProvider{

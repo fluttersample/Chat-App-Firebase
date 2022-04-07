@@ -73,7 +73,7 @@ class TextFormFieldWidget extends StatelessWidget {
             fontSize: 14.0,
           ),
           contentPadding: const EdgeInsets.only(
-              top: 12, bottom: 12, left: 20.0, right: 8.0),
+              top: 12, bottom: 12, left: 8.0, right: 8.0),
           isDense: true,
           errorStyle: const TextStyle(
             color: Colors.red,

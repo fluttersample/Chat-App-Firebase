@@ -44,10 +44,11 @@ class LoginController extends BaseProvider{
           password: passwordTextController.text,
           context: context
       );
+      updateValueLoading(false);
+
       final id =await FirebaseManager.instance
           .getDucId(email: emailTextController.text);
 
-      updateValueLoading(false);
       if (user != null) {
 
         // Navigator.of(context).push(
@@ -56,19 +57,18 @@ class LoginController extends BaseProvider{
         //         idDuc: id,
         //       )),
         // );
-        FirebaseManager.instance.getUserByEmail(
-            email: emailTextController.text)
-        .then((value) {
-          Storage.writeString(Storage.keyUsername, value.docs[0]
-          .data()['displayName']);
-        });
-        Storage.writeString(Storage.keyUserEmail, emailTextController.text);
-        Storage.writeBool(Storage.keyIsLogin, true);
-
+        Storage.deleteAll();
+        final name= await FirebaseManager.instance.getUserNameByEmail(
+            email: emailTextController.text);
+      Storage.saveDetailUser(name, emailTextController.text,
+          true);
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) => const HomeSc()),
         );
+
+
+
       }
     }
   }

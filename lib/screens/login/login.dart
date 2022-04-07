@@ -1,4 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:fiirebasee/managers/FCM.dart';
 import 'package:fiirebasee/managers/firebase_manager.dart';
 import 'package:fiirebasee/managers/validator.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
@@ -31,6 +32,7 @@ class _LoginScState extends State<LoginSc> {
   @override
   void initState() {
     controller = Provider.of<LoginController>(context,listen: false);
+
     super.initState();
   }
 

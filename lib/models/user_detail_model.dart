@@ -5,13 +5,14 @@ class UserDetailModel{
   final String? displayName;
   final String? email;
   final String? photoUrl;
-
+  final String? token;
 
 
   const UserDetailModel({
     this.displayName,
     this.email,
     this.photoUrl,
+    this.token
   });
 
 
@@ -20,6 +21,7 @@ class UserDetailModel{
       'displayName': displayName,
       'email': email,
       'photoUrl': photoUrl,
+      'token' : token
     };
   }
 
@@ -28,6 +30,7 @@ class UserDetailModel{
       displayName: map['displayName'] as String,
       email: map['email'] as String,
       photoUrl: map['photoUrl'] as String,
+      token: map['token'] as String
     );
   }
 

@@ -31,6 +31,13 @@ class Storage{
 
   static deleteAll() =>  prefs!.clear();
 
+  static saveDetailUser(String name, String email , bool isLogin){
+    writeString(keyUsername, name);
+    writeString(keyUserEmail, email);
+    writeBool(keyIsLogin, isLogin);
+
+  }
+
 
 
 

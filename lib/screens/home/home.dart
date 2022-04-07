@@ -1,9 +1,11 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fiirebasee/managers/FCM.dart';
 import 'package:fiirebasee/managers/firebase_manager.dart';
 import 'package:fiirebasee/managers/storage.dart';
 import 'package:fiirebasee/models/chatRoom_model.dart';
+import 'package:fiirebasee/models/user_detail_model.dart';
 import 'package:fiirebasee/screens/conversation/conversation.dart';
 import 'package:fiirebasee/screens/home/home_controller.dart';
 import 'package:fiirebasee/screens/search/search.dart';
@@ -21,9 +23,13 @@ class HomeSc extends StatefulWidget {
 
 class _HomeScState extends State<HomeSc> {
   @override
+  void initState() {
+    super.initState();
+    print(Storage.readString(Storage.keyUsername));
+    FCM.instance.listenToMessage();
+  }
+  @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
      appBar: const AppbarWidget(text: 'Home'),
@@ -38,6 +44,9 @@ class _HomeScState extends State<HomeSc> {
       ),
     );
   }
+
+
+
   Widget _buildChatRoomList()
   {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -56,6 +65,7 @@ class _HomeScState extends State<HomeSc> {
               itemExtent: 75,
               padding: const EdgeInsets.symmetric(
                   vertical: 18,
+                horizontal: 12
              ),
               itemCount: snapshot.data!.docs.length,
                 itemBuilder:(context, index) {
@@ -107,8 +117,17 @@ class ItemChatRoomTile extends StatelessWidget {
                 Storage.readString(Storage.keyUsername),
                 ''),
             style: const TextStyle(
-              fontSize: 18,
-            ),)
+              fontSize: 20,
+            ),),
+            const Spacer(),
+
+            Text(model.lastMessageSend,
+            style: const TextStyle(
+              color: Colors.grey
+            )),
+            const SizedBox(
+              width: 15,
+            )
 
           ],
         ),

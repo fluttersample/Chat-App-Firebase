@@ -49,7 +49,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         body: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets
+                .symmetric(
+              vertical: 12,
+              horizontal: 15
+            ),
             child: Column(
               children: [
                 // Image.asset('assets/img_verify.png',

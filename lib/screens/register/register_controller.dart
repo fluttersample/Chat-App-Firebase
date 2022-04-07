@@ -1,8 +1,11 @@
 
 import 'dart:io';
 import 'package:fiirebasee/core/app_notifier.dart';
+import 'package:fiirebasee/managers/FCM.dart';
 import 'package:fiirebasee/managers/firebase_manager.dart';
+import 'package:fiirebasee/managers/storage.dart';
 import 'package:fiirebasee/models/user_detail_model.dart';
+import 'package:fiirebasee/screens/home/home.dart';
 import 'package:fiirebasee/screens/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -42,23 +45,25 @@ class RegisterController extends BaseProvider
           password: passwordTextController.text,
           context: context
       );
-      print(url);
 
       final model = UserDetailModel(
           photoUrl: url,
           email: user?.email,
-          displayName: user?.displayName
+          displayName: user?.displayName,
+        token: await FCM.instance.getTokenFCM()
       );
        final idDoc = await saveToFirestore(model);
 
       updateValueLoading(false);
       if (user != null) {
-
+        Storage.saveDetailUser(nameTextController.text,
+            emailTextController.text,
+            true);
         Navigator.of(context)
             .pushReplacement(
           MaterialPageRoute(
             builder: (context) =>
-                Profile(idDuc: idDoc),
+                const HomeSc(),
           ),
         );
       }
